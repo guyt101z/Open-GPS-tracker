@@ -1,0 +1,59 @@
+*{
+	box-sizing: border-box;
+}
+
+body{
+	font-family: sans-serif;
+	background: #EFEFEF;
+	padding: 1em;
+}
+
+#page{
+	background: #FFF;
+	padding: 2em;
+	text-align: center;
+	border-radius: 5px;
+	max-width: 258px;
+	margin: 0 auto;
+}
+
+#status p{
+	font-size: 1.5em;
+	padding: 0;
+	padding-top: .9em;
+	margin: 0 0 1em 0;
+	width: 70%;
+	display: inline-block;
+	height: 72px;
+	border-radius: 3px;
+	width: 8em;
+}
+
+.stopped{
+	background: red;
+	color: white;
+}
+
+.active{
+	background: lime;
+	color: black;
+}
+
+button{
+	font-size: 1.5em;
+	font-family: sans-serif;
+	display: block;
+	margin: 1em auto;
+	margin-top: 0;
+	height: 3em;
+	width: 8em;
+	border: 1px solid gray;
+	border-radius: 3px;
+	background: lightgray;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+button:last-child{
+	margin: 0 auto;
+}
