@@ -22,7 +22,7 @@ $(document).ready(function() {
 
 		$.ajax({
 			type: "GET",
-			url: "serve.php",
+			url: "../serve.php",
 			dataType: "xml",
 			success: function(xml) {
 				var points = [];
