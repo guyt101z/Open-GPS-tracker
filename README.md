@@ -12,3 +12,9 @@ Open GPS-tracker is a gps-tracking-thing written in JavaScript and some PHP.
 `serve.php` - reads tracking data and returns it in a format readable by the viewer.
 
 `/viewer/viewer.htm` & `/viewer/viewer.js` - reads `serve.php` repeatedly and puts its contents on a map.
+
+##Instructions
+
+What you need: a web server with PHP-support.
+
+Upload the files. Edit viewer.htm and enter your Google maps API-key. Make sure coords.xml is writeable by the server.
