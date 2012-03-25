@@ -59,13 +59,13 @@ $(document).ready(function() {
 				map.fitBounds(bounds);
 		  	}
 		});
+	}
 
-		$("#stop").on("click", clearTimers);
+	$("#stop").on("click", clearTimers);
 	
-		function clearTimers(){
-			clearInterval(drawIntervalId);
-			clearInterval(clearIntervalId);
-		}
+	function clearTimers(){
+		clearInterval(drawIntervalId);
+		clearInterval(clearIntervalId);
 	}
 
 	// $(document).ajaxError(function(e, xhr, settings, exception) {
