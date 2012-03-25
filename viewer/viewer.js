@@ -56,7 +56,7 @@ $(document).ready(function() {
 				}
 				
 				// fit bounds to track
-				// map.fitBounds(bounds);
+				map.fitBounds(bounds);
 		  	}
 		});
 
@@ -68,8 +68,8 @@ $(document).ready(function() {
 		}
 	}
 
-	$(document).ajaxError(function(e, xhr, settings, exception) {
-		console.log('error in: ' + settings.url + ' \\n'+'error:\\n' + exception);
-	});
+	// $(document).ajaxError(function(e, xhr, settings, exception) {
+	// 	console.log('error in: ' + settings.url + ' \\n'+'error:\\n' + exception);
+	// });
 
 });
