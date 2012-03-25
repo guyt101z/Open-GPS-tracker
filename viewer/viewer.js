@@ -4,7 +4,6 @@ $(document).ready(function() {
 	var updateInterval = 5;
 
 	drawIntervalId = setInterval(drawLine, updateInterval*1000);
-	clearIntervalId = setInterval(deleteOverlays, updateInterval*1000);
 
 	// execute once to show track on page load
 	drawLine();
@@ -12,6 +11,8 @@ $(document).ready(function() {
 	var markersArray = [];
 
 	function drawLine() {
+
+		deleteOverlays();
 
 		$.ajax({
 			type: "GET",
