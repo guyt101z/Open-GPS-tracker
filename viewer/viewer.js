@@ -1,22 +1,15 @@
 $(document).ready(function() {
 
+	// how often to get the track from the server, in seconds
+	var updateInterval = 5;
+
+	drawIntervalId = setInterval(drawLine, updateInterval*1000);
+	clearIntervalId = setInterval(deleteOverlays, updateInterval*1000);
+
 	// execute once to show track on page load
 	drawLine();
 
-	// update track every x millisec
-	drawIntervalId = setInterval(drawLine, 5000);
-	clearIntervalId = setInterval(deleteOverlays, 5000);
-
 	var markersArray = [];
-
-	function deleteOverlays() {
-		if (markersArray) {
-	    	for (i in markersArray) {
-	    		markersArray[i].setMap(null);
-	    	}
-	    	markersArray.length = 0;
-	  	}
-	}
 
 	function drawLine() {
 
@@ -66,6 +59,15 @@ $(document).ready(function() {
 	function clearTimers(){
 		clearInterval(drawIntervalId);
 		clearInterval(clearIntervalId);
+	}
+
+	function deleteOverlays() {
+		if (markersArray) {
+	    	for (i in markersArray) {
+	    		markersArray[i].setMap(null);
+	    	}
+	    	markersArray.length = 0;
+	  	}
 	}
 
 	// $(document).ajaxError(function(e, xhr, settings, exception) {
