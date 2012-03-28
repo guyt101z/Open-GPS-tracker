@@ -25,7 +25,7 @@ What you need: a web server with PHP-support.
 
 ###Installation:
 1.	Upload the files to your server.
-2.	Edit `viewer.php` and enter your Google maps API-key at line 11.
+2.	Edit `viewer.php` and enter your Google maps API-key at line 5.
 3.	Make sure the `tracks`-directory is writeable by the server.
 
 ###Tracking:
@@ -33,4 +33,4 @@ What you need: a web server with PHP-support.
 2.	The track will be saved to /tracks/*your ID*.xml
 
 ###Viewing a track:
-Go to `/viewer/viewer.php?runner=*your ID*` - change *your ID* to whatever you entered in the tracker.
+Go to /viewer/viewer.php?runner=`your ID` - change `your ID` to whatever ID you entered in the tracker.

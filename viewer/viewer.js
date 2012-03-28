@@ -1,5 +1,21 @@
 $(document).ready(function() {
 
+	// initialize google maps
+	initialize();
+
+	var map;
+
+	function initialize() {
+		var myOptions = {
+		center: new google.maps.LatLng(57.726103,12.9399748),
+		zoom: 16,
+		mapTypeId: google.maps.MapTypeId.SATELLITE
+		};
+
+		map = new google.maps.Map(document.getElementById("map_canvas"),
+		myOptions);
+	}
+
 	// how often to get the track from the server, in seconds
 	var updateInterval = 5;
 

@@ -3,7 +3,10 @@ $(document).ready(function() {
 	// how often should we send location data? in seconds
 	var sendInterval = 5;
 
-	var runnerId = prompt("Runner id?", "");
+	var runnerId;
+	while (!runnerId){
+		runnerId = prompt("Enter your runner ID:", "");
+	}
 	var intervalId;
 	var watchId;
 	var index = 0;
