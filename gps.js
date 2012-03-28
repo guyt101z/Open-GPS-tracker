@@ -8,7 +8,7 @@ $(document).ready(function() {
 	var watchId;
 	var index = 0;
 	
-	formData = new Object();
+	var formData = new Object();
 
 	$("#status p").text("Not tracking");
 	$('#start').on("click", startTrack);
@@ -49,7 +49,7 @@ $(document).ready(function() {
 			intervalId = setInterval(postData, sendInterval*1000);
 		}
 
-		index++
+		index++;
 	}
 
 	function addTime(){
@@ -61,24 +61,24 @@ $(document).ready(function() {
 		// date to ISO 8601,
 		// developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Date#Example.3a_ISO_8601_formatted_dates
 		function ISODateString(d){
-	    	function pad(n){return n<10 ? '0'+n : n}
-	    	return d.getUTCFullYear()+'-'
-	        + pad(d.getUTCMonth()+1)+'-'
-	        + pad(d.getUTCDate())+'T'
-	        + pad(d.getUTCHours())+':'
-	        + pad(d.getUTCMinutes())+':'
-	        + pad(d.getUTCSeconds())+'Z'
- 		}
+			function pad(n){return n<10 ? '0'+n : n}
+			return d.getUTCFullYear()+'-'
+			+ pad(d.getUTCMonth()+1)+'-'
+			+ pad(d.getUTCDate())+'T'
+			+ pad(d.getUTCHours())+':'
+			+ pad(d.getUTCMinutes())+':'
+			+ pad(d.getUTCSeconds())+'Z'
+		}
 	}
 
 	function postData(){
 		addTime();
 		
 		$.ajax({
-			type: 	'POST',
-			url: 		'save.php?file='+runnerId,
-			data: 	formData,
-			async: 	false,
+			type:	'POST',
+			url:	'save.php?file='+runnerId,
+			data:	formData,
+			async:	false,
 		});
 	}
 
