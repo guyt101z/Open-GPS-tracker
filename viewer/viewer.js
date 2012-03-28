@@ -5,8 +5,15 @@ $(document).ready(function() {
 
 	drawIntervalId = setInterval(drawLine, updateInterval*1000);
 
-	// execute once to show track on page load
-	drawLine();
+	// have we recieved the track-url via GET-parameter? see viewer.php line 28
+	if(!trackUrl){
+		alert("No runner chosen!");
+		clearTimers();
+	}
+	else{
+		// execute once to show track on page load
+		drawLine();
+	}
 
 	var markersArray = [];
 
@@ -16,7 +23,7 @@ $(document).ready(function() {
 
 		$.ajax({
 			type: "GET",
-			url: "../serve.php",
+			url: "serve.php?file="+trackUrl,
 			dataType: "xml",
 			success: function(xml) {
 				var points = [];
@@ -59,7 +66,6 @@ $(document).ready(function() {
 	
 	function clearTimers(){
 		clearInterval(drawIntervalId);
-		clearInterval(clearIntervalId);
 	}
 
 	function deleteOverlays() {

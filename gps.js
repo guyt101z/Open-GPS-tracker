@@ -3,6 +3,7 @@ $(document).ready(function() {
 	// how often should we send location data? in seconds
 	var sendInterval = 5;
 
+	var runnerId = prompt("Runner id?", "");
 	var intervalId;
 	var watchId;
 	var index = 0;
@@ -73,13 +74,11 @@ $(document).ready(function() {
 	function postData(){
 		addTime();
 		
-		// $.post('save.php', formData);
-
 		$.ajax({
-		  type: 	'POST',
-		  url: 		'save.php',
-		  data: 	formData,
-		  async: 	false,
+			type: 	'POST',
+			url: 		'save.php?file='+runnerId,
+			data: 	formData,
+			async: 	false,
 		});
 	}
 
