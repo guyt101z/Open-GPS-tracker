@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
 	var runnerArray =	[
-						{	"file":"b1",  "color":"red"	},
+						{	"file":"b1",  "color":"red"		},
 						{	"file":"b2",  "color":"blue"	},
 						];
 
@@ -9,9 +9,14 @@ $(document).ready(function() {
 	var updateInterval = 5;
 
 	// map overlay
+	var omapCoords = 	[
+						{	"lat" : 63.828197, "lon" : 20.156369	},	// bottom left corner
+						{	"lat" : 63.837033, "lon" : 20.182375	}	// top right corner
+						];
+
 	var imageBounds = new google.maps.LatLngBounds(
-		new google.maps.LatLng(63.828197,20.156369), 	// south west corner
-		new google.maps.LatLng(63.837033,20.182375)		// north east corner
+		new google.maps.LatLng(omapCoords[0].lat,omapCoords[0].lon), 	
+		new google.maps.LatLng(omapCoords[1].lat,omapCoords[1].lon)		
 	); 	
 
 	var omap = new google.maps.GroundOverlay("maps/backen.gif", imageBounds);
@@ -22,8 +27,7 @@ $(document).ready(function() {
 	var tailLength = 24;
 	var bounds = new google.maps.LatLngBounds ();
 	var markersArray = [];
-	var circle;
-
+	
 	function startUp(){
 		drawLine();
 		drawIntervalId = setInterval(drawLine, updateInterval*1000);
@@ -35,10 +39,14 @@ $(document).ready(function() {
 	startUp();
 
 	// initialize google maps
-	function initialize(){		
+	function initialize(){
+
+		console.log((omapCoords[0].lat+omapCoords[1].lat))
 		
 		var myOptions = {
-			center: new google.maps.LatLng(63.832197,20.169369),
+			center: new google.maps.LatLng(
+				(omapCoords[0].lat+omapCoords[1].lat)/2,
+				(omapCoords[0].lon+omapCoords[1].lon)/2),
 			zoom: 16,
 			mapTypeId: google.maps.MapTypeId.HYBRID,
 			streetViewControl: false,
@@ -89,7 +97,7 @@ $(document).ready(function() {
 					});
 
 					// circle
-					circle = new google.maps.Circle({
+					var circle = new google.maps.Circle({
 						strokeColor: "black",
 						strokeOpacity: .5,
 						strokeWeight: 3,
@@ -114,30 +122,15 @@ $(document).ready(function() {
 					markersArray.push(poly);
 
 					// put polygon on map
-					if (markersArray) {
-						for (i in markersArray) {
-							markersArray[i].setMap(map);
-						}
+					for (i in markersArray) {
+						markersArray[i].setMap(map);
 					}
-					else {
-						alert("Error!");
-					}							
-					
-					// fit bounds to track
-					// if ($('#fitmap').is(':checked')) {	       
-					// 	map.fitBounds(bounds);
-					// }
-
-					// if ($('#fitmap').is(':checked')) {	       
-					// 	map.setCenter(points[points.length-1]);
-					// }
 				}
 			});
 		}
 	}
 
 	function deleteOverlays() {
-
 		if (markersArray) {
 			for (i in markersArray) {
 				markersArray[i].setMap(null);
@@ -146,7 +139,7 @@ $(document).ready(function() {
 		}
 	}
 	
-	function toggleMap(){	
+	function toggleMap(){
 		if(mapState){
 			omap.setMap(null)
 			mapState = 0;
