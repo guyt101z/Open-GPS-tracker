@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>Open GPS-tracker map view</title>
-<script src="http://maps.googleapis.com/maps/api/js?key=YOUR API KEY HERE&sensor=false"></script>
+<script src="http://maps.googleapis.com/maps/api/js?key=YOUR API KEY&sensor=false"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script src="viewer.js"></script>
 <!--[if lt IE 9]>
@@ -17,8 +17,15 @@
 
 <div id="settings">
 	<div id="startstop" class="started">Stop</div>
-	<input type="checkbox" id="togglemap" name="togglemap" checked="checked"><label for="togglemap">Show O-map</label>
-	<input type="checkbox" id="fitmap" name="fitmap" checked="checked"><label for="fitmap">Fit track(s)</label>
+	<p>
+		<input type="checkbox" id="togglemap" name="togglemap" checked="checked"><label for="togglemap">Show O-map</label>
+	</p>
+	<!-- <input type="checkbox" id="fitmap" name="fitmap" checked="checked"><label for="fitmap">Fit track(s)</label> -->
+	<p>Tail:<select name="trklength" id="trklength">
+		<option value="24">2 min</option>
+		<option value="60">5 min</option>
+		<option value="99999">All</option>
+	</select></p>
 </div>
 
 </body>

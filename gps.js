@@ -11,7 +11,7 @@ $(document).ready(function() {
 	var watchId;
 	var index = 0;
 	
-	var formData = new Object();
+	var formData = {};
 
 	$("#status p").text("Not tracking");
 	$('#start').on("click", startTrack);

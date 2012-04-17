@@ -37,7 +37,7 @@ body{
 }
 
 .stopped{
-	background: green;
+	background: rgba(0, 255, 0, 0.5);
 }
 
 .started{
@@ -46,4 +46,12 @@ body{
 
 label{
 	margin-left: .3em;
+}
+
+select{
+	margin-left: 1em;
+}
+
+#map_canvas div{
+	cursor: hand !important;
 }
