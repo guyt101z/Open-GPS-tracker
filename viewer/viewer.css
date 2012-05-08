@@ -16,14 +16,28 @@ body{
 
 #settings{
 	position: fixed;
-	width: 10em;
-	height: 10em;
+	width: 11em;
 	background: rgba(0, 0, 0, 0.5);
 	top: 3em;
 	right: 1em;
 	padding: 1em;
 	color: white;
 	border-radius: 4px;
+}
+
+#settings ul{
+	margin-top: 1em;
+	margin-bottom: 0;
+	list-style: none;
+	padding: 0;
+	font-weight: bold;
+}
+
+#settings ul li:before{
+	content: "\25A0  ";
+	font-size: 2em;
+	float: left;
+	line-height: .5em;
 }
 
 #startstop{
@@ -45,11 +59,15 @@ body{
 }
 
 label{
-	margin-left: .3em;
+	margin-left: .5em;
 }
 
 select{
 	margin-left: 1em;
+}
+
+input{
+	margin: 0;
 }
 
 #map_canvas div{

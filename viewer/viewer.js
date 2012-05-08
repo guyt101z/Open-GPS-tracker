@@ -1,145 +1,172 @@
 $(document).ready(function() {
 
-	var runnerArray =	[
-						{	"file":"b1",  "color":"red"		},
-						{	"file":"b2",  "color":"blue"	},
-						];
-
-	// how often to get the track from the server, in seconds
+	// how often to get the tracks from the server, in seconds
 	var updateInterval = 5;
 
 	// map overlay
-	var omapCoords = 	[
-						{	"lat" : 63.828197, "lon" : 20.156369	},	// bottom left corner
-						{	"lat" : 63.837033, "lon" : 20.182375	}	// top right corner
-						];
+	var omapCoords = [
+		{	"lat" : 63.828197, "lon" : 20.156369	},	// bottom left corner
+		{	"lat" : 63.837033, "lon" : 20.182375	}	// top right corner
+	];
 
 	var imageBounds = new google.maps.LatLngBounds(
-		new google.maps.LatLng(omapCoords[0].lat,omapCoords[0].lon), 	
-		new google.maps.LatLng(omapCoords[1].lat,omapCoords[1].lon)		
+		new google.maps.LatLng(omapCoords[0].lat, omapCoords[0].lon), 	
+		new google.maps.LatLng(omapCoords[1].lat, omapCoords[1].lon)		
 	); 	
 
 	var omap = new google.maps.GroundOverlay("maps/backen.gif", imageBounds);
-	
 	var map;
-
 	var mapState = 1;
-	var tailLength = 24;
 	var bounds = new google.maps.LatLngBounds ();
 	var markersArray = [];
-	
-	function startUp(){
-		drawLine();
-		drawIntervalId = setInterval(drawLine, updateInterval*1000);
-		$('#startstop').removeClass('stopped').addClass('started');
-		$('#startstop').text("Stop");
-	}
+	var circleArray = [];
 
 	initialize();
 	startUp();
 
-	// initialize google maps
-	function initialize(){
+	function startUp() {
+		init();
+		drawIntervalId = setInterval(init, updateInterval*1000);
+		$('#startstop').removeClass('stopped').addClass('started');
+		$('#startstop').text("Stop");
+	}
 
-		console.log((omapCoords[0].lat+omapCoords[1].lat))
-		
-		var myOptions = {
+	// initialize google maps
+	function initialize() {
+
+		var mapOptions = {
 			center: new google.maps.LatLng(
 				(omapCoords[0].lat+omapCoords[1].lat)/2,
 				(omapCoords[0].lon+omapCoords[1].lon)/2),
 			zoom: 16,
-			mapTypeId: google.maps.MapTypeId.HYBRID,
+			mapTypeId: google.maps.MapTypeId.SATELLITE,
 			streetViewControl: false,
 			panControl: false,
 		};
 
-		map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+		map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
 
 		omap.setMap(map);
 	}
 
-	// get track data, put it on the map
-	function drawLine() {
+	function init() {
+		// if markersArray is empty we will populate it with all data from server.
+		if(!markersArray.length){
+			getData("all");
+		}
+		// if it's already populated, we just need to add the latest point.
+		else{
+			getData("latest");
+		}
+	}
 
+	// get track data, put it in array
+	function getData(state) {
+		$.ajax({
+			type: "GET",
+			url: 'gettracks.php?state='+state,
+			dataType: 'json',
+			// async: false, 
+			success: function(data) {
+				if(state === "latest") {
+					processNewData(data);
+				}
+				else {
+					processAllData(data);
+				}
+			}
+		});
+	}
+
+	function processAllData(data) {
+		$('#meta').prepend(data.compname);
+
+		for (var i = data.runners.length - 1; i >= 0; i--) {
+
+			var randColor = '#'+(0x1000000+(Math.random())*0xffffff).toString(16).substr(1,6);
+			$('#runners').append('<li id='+data.runners[i].runnerid+'>'+data.runners[i].runnerid+'</li>');
+			$('#'+data.runners[i].runnerid).css('color', randColor);
+
+			var points = [];
+			var latArr = data.runners[i].lat.split(",");
+			var lonArr = data.runners[i].lon.split(",");
+
+			// get dem points
+			for (var j = lonArr.length - 1; j >= 0; j--) {
+				var p = new google.maps.LatLng(latArr[j], lonArr[j]);
+				points.push(p);
+			}
+
+			// create polyline from points
+			var poly = new google.maps.Polyline({
+				path: points,
+				strokeColor: randColor,
+				strokeOpacity: 1,
+				strokeWeight: 5
+			});
+
+			markersArray.unshift(poly);
+
+			var circle = new google.maps.Circle({
+				strokeColor: 'black',
+				strokeOpacity: 1,
+				strokeWeight: 3,
+				fillColor: randColor,
+				fillOpacity: .7,
+				map: map,
+				center: points[points.length-1], // last point
+				radius: 7,
+				zIndex: 100
+			});
+			
+			circleArray.unshift(circle);
+		}
+		draw();
+	}
+
+	function processNewData(data) {
+
+		for (var i = data.runners.length - 1; i >= 0; i--) {
+			var lat = data.runners[i].lat;
+			var lon = data.runners[i].lon;
+
+			var newPoint = new google.maps.LatLng(lat, lon);
+
+			var target = markersArray[i].latLngs.b[0].b;
+			var circle = circleArray[i];
+
+			// if the new point is not new, i.e. already in array, dont add it
+			if(target[target.length-1].$a !== newPoint.$a && target[target.length-1].ab !== newPoint.ab) {
+				target.push(newPoint);
+				circle.center = newPoint;
+			}
+		}
+		draw();
+	}
+
+	function draw() {
 		deleteOverlays();
 
-		for (var x = runnerArray.length - 1; x >= 0; x--) {
-
-			var color = runnerArray[x].color;
-			var file = runnerArray[x].file;
-
-			$.ajax({
-				type: "GET",
-				url: "serve.php?file="+file,
-				dataType: "xml",
-				async: false, // strange things happen without this
-				success: function(xml) {
-					
-					var points = [];
-					var index = 0;
-
-					// finding all trackpoints, proccess them in reverse order
-					$($(xml).find("trkpt").get().reverse()).each(function() {
-						var lat = $(this).attr("lat");
-						var lon = $(this).attr("lon");
-						var p = new google.maps.LatLng(lat, lon);
-						points.push(p);
-						bounds.extend(p);
-
-						index++;
-
-						// break out of loop if enough points have been
-						// added to draw a sufficiently long tail.
-						if(index>tailLength){
-							index = 0;
-							return false;
-						}
-					});
-
-					// circle
-					var circle = new google.maps.Circle({
-						strokeColor: "black",
-						strokeOpacity: .5,
-						strokeWeight: 3,
-						fillColor: color,
-						fillOpacity: .7,
-						map: map,
-						center: points[0], // last trackpoint (since we reversed it all)
-						radius: 7,
-						zIndex: 100
-					});
-
-					markersArray.push(circle);
-
-					// polyline
-					var poly = new google.maps.Polyline({
-						path: points,
-						strokeColor: color,
-						strokeOpacity: .5,
-						strokeWeight: 5
-					});
-
-					markersArray.push(poly);
-
-					// put polygon on map
-					for (i in markersArray) {
-						markersArray[i].setMap(map);
-					}
-				}
-			});
+		// put polygons and circles on map
+		for (i in markersArray) {
+			markersArray[i].setMap(map);
+		}
+		for (i in circleArray) {
+			circleArray[i].setMap(map);
 		}
 	}
 
 	function deleteOverlays() {
-		if (markersArray) {
-			for (i in markersArray) {
-				markersArray[i].setMap(null);
-			}
-			markersArray.length = 0;
+		console.log("deleting");
+		for (i in markersArray) {
+			markersArray[i].setMap(null);
+		}
+		for (i in circleArray) {
+			circleArray[i].setMap(null);
 		}
 	}
-	
-	function toggleMap(){
+
+	function toggleMap() {
 		if(mapState){
 			omap.setMap(null)
 			mapState = 0;
@@ -150,7 +177,7 @@ $(document).ready(function() {
 		}
 	}
 
-	function toggleTimer(){
+	function toggleTimer() {
 		if(drawIntervalId){
 			clearInterval(drawIntervalId);
 			drawIntervalId = null;
@@ -168,14 +195,8 @@ $(document).ready(function() {
 	// start stop
 	$('#startstop').on('click', toggleTimer);
 	
-	// changing tail length
-	$('#trklength').change(function () {
-		tailLength = $('#trklength').val();
-		drawLine();
+	// AJAX debugging
+	$(document).ajaxError(function(e, xhr, settings, exception) {
+		console.log('error in: ' + settings.url + ' \\n'+'error:\\n' + exception);
 	});
-
-	// // AJAX debugging
-	// $(document).ajaxError(function(e, xhr, settings, exception) {
-	// 	console.log('error in: ' + settings.url + ' \\n'+'error:\\n' + exception);
-	// });
 });

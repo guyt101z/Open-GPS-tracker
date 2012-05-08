@@ -1,11 +1,14 @@
 <?php
 
-$runnerId = $_GET['file'];
+require_once 'library.php';
 
-$f = fopen('tracks/'.$runnerId.'.xml', 'a+');
+db_connect();
 
-fwrite($f, '<trkpt lat="'.$_POST['lat'].'" lon="'.$_POST['lon'].'"><time>'.$_POST['time'].'</time></trkpt>'."\n");
+$runnerId = mysqli_real_escape_string($link, $_GET['file']);
+$lat = mysqli_real_escape_string($link, $_POST['lat']);
+$lon = mysqli_real_escape_string($link, $_POST['lon']);
+$time = mysqli_real_escape_string($link, $_POST['time']);
 
-fclose($f);
+$query = mysqli_query($link, "INSERT INTO tracks SET runnerid='$runnerId', lat='$lat', lon='$lon', time='$time'");
 
 ?>

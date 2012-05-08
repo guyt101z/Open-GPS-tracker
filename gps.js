@@ -37,7 +37,6 @@ $(document).ready(function() {
 	}
 	
 	function geo_success(position){
-
 		$("#status p").text("Tracking active").removeClass("stopped").addClass("active");
 		$("#start").attr("disabled", "disabled");
 		$("#stop").removeAttr("disabled");
@@ -48,7 +47,7 @@ $(document).ready(function() {
 		formData.lat=lat;
 		formData.lon=lon;
 				
-		if(index===0){
+		if(index === 0){
 			intervalId = setInterval(postData, sendInterval*1000);
 		}
 
@@ -59,6 +58,7 @@ $(document).ready(function() {
 		// insert time in formData-object
 		var d = new Date();
 		var d_utc = ISODateString(d);
+		
 		formData.time=d_utc;
 		
 		// date to ISO 8601,
@@ -76,7 +76,7 @@ $(document).ready(function() {
 
 	function postData(){
 		addTime();
-		
+
 		$.ajax({
 			type:	'POST',
 			url:	'save.php?file='+runnerId,
